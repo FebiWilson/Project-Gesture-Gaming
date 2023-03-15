@@ -11,6 +11,7 @@ with mp_hand.Hands(min_detection_confidence=0.5,
     while True:
         ret, image=video.read()
         image=cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.flip(image, 1)
         image.flags.writeable-False
         results=hands.process(image)
         image.flags.writeable-True
