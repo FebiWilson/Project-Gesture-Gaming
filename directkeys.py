@@ -5,8 +5,10 @@ SendInput = ctypes.windll.user32.SendInput
 
 
 right_pressed=0x4D	
-
+up_pressed=0x48
+space_pressed=0x39
 left_pressed=0x4B
+down_pressed=0x50
 
 # C struct redefinitions 
 PUL = ctypes.POINTER(ctypes.c_ulong)

@@ -1,12 +1,14 @@
 import cv2
 import mediapipe as mp
 import time
-from directkeys import right_pressed,left_pressed
+from directkeys import right_pressed,left_pressed,up_pressed,down_pressed,space_pressed
 from directkeys import PressKey, ReleaseKey  
 
 
-break_key_pressed=left_pressed
-accelerato_key_pressed=right_pressed
+break_key_pressed=down_pressed
+accelerato_key_pressed=space_pressed
+third_button=right_pressed
+fourth_button=left_pressed
 
 time.sleep(2.0)
 current_key_pressed = set()
@@ -25,10 +27,13 @@ with mp_hand.Hands(min_detection_confidence=0.5,
         keyPressed = False
         break_pressed=False
         accelerator_pressed=False
+        lsteer_pressed=False
+        rsteer_pressed=False
         key_count=0
         key_pressed=0
         ret,image=video.read()
         image=cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.flip(image, 1)
         image.flags.writeable=False
         results=hands.process(image)
         image.flags.writeable=True
@@ -66,13 +71,33 @@ with mp_hand.Hands(min_detection_confidence=0.5,
                 key_count=key_count+1
             elif total==5:
                 cv2.rectangle(image, (20, 300), (270, 425), (0, 255, 0), cv2.FILLED)
-                cv2.putText(image, " GAS", (45, 375), cv2.FONT_HERSHEY_SIMPLEX,
+                cv2.putText(image, "POWER", (45, 375), cv2.FONT_HERSHEY_SIMPLEX,
                     2, (255, 0, 0), 5)
                 PressKey(accelerato_key_pressed)
                 key_pressed=accelerato_key_pressed
                 accelerator_pressed=True
                 keyPressed = True
                 current_key_pressed.add(accelerato_key_pressed)
+                key_count=key_count+1
+            elif total==3:
+                cv2.rectangle(image, (20, 300), (270, 425), (0, 255, 0), cv2.FILLED)
+                cv2.putText(image, "RIGHT", (45, 375), cv2.FONT_HERSHEY_SIMPLEX,
+                    2, (255, 0, 0), 5)
+                PressKey(third_button)
+                key_pressed=third_button
+                lsteer_pressed=True
+                keyPressed = True
+                current_key_pressed.add(third_button)
+                key_count=key_count+1
+            elif total==2:
+                cv2.rectangle(image, (20, 300), (270, 425), (0, 255, 0), cv2.FILLED)
+                cv2.putText(image, "LEFT", (45, 375), cv2.FONT_HERSHEY_SIMPLEX,
+                    2, (255, 0, 0), 5)
+                PressKey(fourth_button)
+                key_pressed=fourth_button
+                rsteer_pressed=True
+                keyPressed = True
+                current_key_pressed.add(fourth_button)
                 key_count=key_count+1
         if not keyPressed and len(current_key_pressed) != 0:
             for key in current_key_pressed:
