@@ -16,22 +16,22 @@ while True:
         lmList=hands[0]
         fingerUp=detector.fingersUp(lmList)
         print(fingerUp)
-        if fingerUp==[0,0,0,0,0]:
+        if sum(fingerUp)==0:
             cv2.putText(frame, 'Finger Count: 0', (20,460), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 1, cv2.LINE_AA)
            
-        if fingerUp==[0,1,0,0,0]:
+        if sum(fingerUp)==1:
             cv2.putText(frame, 'Finger Count: 1', (20,460), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 1, cv2.LINE_AA)
            
-        if fingerUp==[0,1,1,0,0]:
+        if sum(fingerUp)==2:
             cv2.putText(frame, 'Finger Count: 2', (20,460), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 1, cv2.LINE_AA)
            
-        if fingerUp==[0,1,1,1,0]:
+        if sum(fingerUp)==3:
             cv2.putText(frame, 'Finger Count: 3', (20,460), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 1, cv2.LINE_AA)
           
-        if fingerUp==[0,1,1,1,1]:
+        if sum(fingerUp)==4:
             cv2.putText(frame, 'Finger Count: 4', (20,460), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 1, cv2.LINE_AA)
            
-        if fingerUp==[1,1,1,1,1]:
+        if sum(fingerUp)==5:
             cv2.putText(frame, 'Finger Count: 5', (20,460), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 1, cv2.LINE_AA)
             
        
@@ -42,3 +42,10 @@ while True:
 
 video.release()
 cv2.destroyAllWindows()
+
+def sum(fingerUp):
+    fs = 0
+    for i in fingerUp:
+        fs = fs + 1
+    return fs
+
