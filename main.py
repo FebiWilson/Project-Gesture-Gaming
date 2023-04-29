@@ -1,46 +1,35 @@
+import time
+import tkinter as tk
+
 import cv2
 import mediapipe as mp
-import time
-from directkeys import right_pressed,left_pressed,up_pressed,down_pressed,space_pressed
-from directkeys import PressKey, ReleaseKey  
+from pyparsing import null_debug_action
 
+from directkeys import (PressKey, ReleaseKey, down_pressed, left_pressed,
+                        right_pressed, space_pressed, up_pressed)
 
-break_key_pressed=down_pressed
-accelerato_key_pressed=space_pressed
-third_button=right_pressed
-fourth_button=left_pressed
-
-time.sleep(2.0)
-current_key_pressed = set()
-
-mp_draw=mp.solutions.drawing_utils
-mp_hand=mp.solutions.hands
-
-
-tipIds=[4,8,12,16,20]
-
-video=cv2.VideoCapture(0)
-window = tk.Tk()
-window.title("Hand Gesture Control")
-window.geometry("400x200")
-
-is_running = False
-
-def start():
-    global is_running
-    is_running = True
-    window.after(1, process_video)
-
-def stop():
-    global is_running
-    is_running = False
 
 def process_video():
     global is_running
+    
     if is_running:
+        video=cv2.VideoCapture(0)
+        break_key_pressed=down_pressed
+        accelerato_key_pressed=space_pressed
+        third_button=right_pressed
+        fourth_button=left_pressed
+
+        time.sleep(2.0)
+        current_key_pressed = set()
+
+        mp_draw=mp.solutions.drawing_utils
+        mp_hand=mp.solutions.hands
+
+
+        tipIds=[4,8,12,16,20]
         with mp_hand.Hands(min_detection_confidence=0.5,
                     min_tracking_confidence=0.5) as hands:
-            while True:
+            while is_running:
                 keyPressed = False
                 break_pressed=False
                 accelerator_pressed=False
@@ -50,7 +39,6 @@ def process_video():
                 key_pressed=0
                 ret,image=video.read()
                 image=cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                image = cv2.flip(image, 1)
                 image.flags.writeable=False
                 results=hands.process(image)
                 image.flags.writeable=True
@@ -136,8 +124,32 @@ def process_video():
                     #     print("Close")
                 cv2.imshow("Frame",image)
                 k=cv2.waitKey(1)
-                if k==ord('q'):
+                if k=='q':
+                    stop
                     break
-video.release()
-cv2.destroyAllWindows()
+    video.release()
+    cv2.destroyAllWindows()
+window = tk.Tk()
+window.title("Hand Gesture Control")
+window.geometry("400x200")
+
+is_running=False
+
+def start():
+    global is_running
+    is_running = True
+    window.after(1, process_video)
+
+def stop():
+    global is_running
+    is_running = False
+    print("stop")
+
+start_button = tk.Button(window, text="Start", command=start)
+start_button.pack(side="left", padx=10)
+
+stop_button = tk.Button(window, text="Stop", command=stop)
+stop_button.pack(side="left", padx=10)
+
+window.mainloop()
 
