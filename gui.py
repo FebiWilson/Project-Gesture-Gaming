@@ -7,18 +7,46 @@ class MyWidget(QtWidgets.QWidget):
         super().__init__(flags=QtCore.Qt.WindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint))
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.move(0, 0)
-
+        self.setWindowFlags(QtCore.Qt.WindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint))
         self.start_button = QtWidgets.QPushButton('Start')
         self.stop_button = QtWidgets.QPushButton('Stop')
         self.close_button = QtWidgets.QPushButton('X')
 
-        self.start_button.setStyleSheet('QPushButton { background-color: #1abc9c; color: white; border-radius: 20px; }')
-        self.stop_button.setStyleSheet('QPushButton { background-color: #e74c3c; color: white; border-radius: 20px; }')
+        self.start_button.setStyleSheet('''
+            QPushButton {
+                width: 50px;
+                height: 50px;
+                background-color: #004d00;
+                border-radius: 25px;
+                color: white;
+                font-size: 15px;
+                border: none;
+                outline: none;
+            }
+            QPushButton:hover {
+                background-color: #009900;
+            }
+        ''')
+        self.stop_button.setStyleSheet('''
+            QPushButton {
+                width: 50px;
+                height: 50px;
+                background-color: #ff8c1a;
+                border-radius: 25px;
+                color: white;
+                font-size: 15px;
+                border: none;
+                outline: none;
+            }
+            QPushButton:hover {
+                background-color: #1aff1a;
+            }
+        ''')
         self.close_button.setStyleSheet('''
             QPushButton {
                 width: 50px;
                 height: 50px;
-                background-color: #0d009c;
+                background-color: #cc0000;
                 border-radius: 25px;
                 color: white;
                 font-size: 25px;
@@ -26,7 +54,7 @@ class MyWidget(QtWidgets.QWidget):
                 outline: none;
             }
             QPushButton:hover {
-                background-color: #19137a;
+                background-color: #ff0000;
             }
         ''')
 
@@ -45,12 +73,13 @@ class MyWidget(QtWidgets.QWidget):
         hbox_close.addWidget(self.close_button)
         vbox_buttons.addLayout(hbox_close)
 
-        group_box = QtWidgets.QGroupBox('Actions')
+        group_box = QtWidgets.QGroupBox('')
         group_box.setStyleSheet('''
             QGroupBox {
                 background-color: transparent;
                 font-size: 20px;
                 color: white;
+                border-radius: 20px;
             }
             QGroupBox::title {
                 subcontrol-origin: margin;
