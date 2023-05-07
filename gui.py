@@ -6,6 +6,7 @@ class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__(flags=QtCore.Qt.WindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint))
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        self.move(0, 0)
 
         self.start_button = QtWidgets.QPushButton('Start')
         self.stop_button = QtWidgets.QPushButton('Stop')
@@ -15,10 +16,10 @@ class MyWidget(QtWidgets.QWidget):
         self.stop_button.setStyleSheet('QPushButton { background-color: #e74c3c; color: white; border-radius: 20px; }')
         self.close_button.setStyleSheet('''
             QPushButton {
-                width: 100px;
-                height: 100px;
+                width: 50px;
+                height: 50px;
                 background-color: #0d009c;
-                border-radius: 50px;
+                border-radius: 25px;
                 color: white;
                 font-size: 25px;
                 border: none;
@@ -63,12 +64,12 @@ class MyWidget(QtWidgets.QWidget):
         self.collapse_button.clicked.connect(lambda: group_box.setVisible(not group_box.isVisible()))
         self.collapse_button.setStyleSheet('''
             QPushButton {
-                width: 100px;
-                height: 100px;
+                width: 50px;
+                height: 50px;
                 background-color: #0d009c;
-                border-radius: 50px;
+                border-radius: 25px;
                 color: white;
-                font-size: 25px;
+                font-size: 13px;
                 border: none;
                 outline: none;
             }
@@ -116,7 +117,6 @@ class MyWidget(QtWidgets.QWidget):
         else:
             super().mousePressEvent(event)
 
-
     def mouseMoveEvent(self, event):
         if self.offset is not None and self.draggable:
             self.move(self.pos() + event.pos() - self.offset)
@@ -130,13 +130,13 @@ class MyWidget(QtWidgets.QWidget):
         else:
             super().mouseMoveEvent(event)
 
-
     def mouseReleaseEvent(self, event):
         if self.collapse_offset is not None:
             self.collapse_offset = None
         else:
             self.offset = None
             super().mouseReleaseEvent(event)
+    
 
 
 
