@@ -2,8 +2,6 @@ import subprocess
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 
-
-
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__(flags=QtCore.Qt.WindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint))
@@ -12,7 +10,7 @@ class MyWidget(QtWidgets.QWidget):
         self.start_button = QtWidgets.QPushButton('Start')
         self.stop_button = QtWidgets.QPushButton('Stop')
         self.close_button = QtWidgets.QPushButton('X')
-        
+
         self.start_button.setStyleSheet('QPushButton { background-color: #1abc9c; color: white; border-radius: 20px; }')
         self.stop_button.setStyleSheet('QPushButton { background-color: #e74c3c; color: white; border-radius: 20px; }')
         self.close_button.setStyleSheet('''
@@ -36,9 +34,15 @@ class MyWidget(QtWidgets.QWidget):
         self.stop_button.setEnabled(False)
         self.close_button.clicked.connect(self.close_2)
 
-        vbox_buttons = QtWidgets.QVBoxLayout()
+        vbox_buttons = QtWidgets.QHBoxLayout()
         vbox_buttons.addWidget(self.start_button)
         vbox_buttons.addWidget(self.stop_button)
+
+        # Add close button to vbox_buttons
+        hbox_close = QtWidgets.QHBoxLayout()
+        hbox_close.addStretch()
+        hbox_close.addWidget(self.close_button)
+        vbox_buttons.addLayout(hbox_close)
 
         group_box = QtWidgets.QGroupBox('Actions')
         group_box.setStyleSheet('''
@@ -75,17 +79,21 @@ class MyWidget(QtWidgets.QWidget):
         self.collapse_button.setIcon(QtGui.QIcon('Game_icon.png'))
         self.collapse_button.setIconSize(QtCore.QSize(30, 30))
 
-        vbox = QtWidgets.QVBoxLayout()
-        vbox.addWidget(self.collapse_button)
-        vbox.addWidget(group_box)
-
         hbox = QtWidgets.QHBoxLayout()
-        hbox.addLayout(vbox)
-        hbox.addWidget(self.close_button)
+        hbox.addWidget(self.collapse_button)
+        hbox.addStretch()
+        hbox.addWidget(group_box)
 
-        self.setLayout(hbox)
+        vbox_main = QtWidgets.QVBoxLayout()
+        vbox_main.addLayout(hbox)
+        # Remove self.close_button from here
+        self.setLayout(vbox_main)
 
         self.process = None
+        self.draggable = True
+        self.offset = None
+        self.collapse_offset = None
+
     def start_script(self):
         self.process = subprocess.Popen(['python', 'mini.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         self.start_button.setEnabled(False)
@@ -99,6 +107,37 @@ class MyWidget(QtWidgets.QWidget):
     def close_2(self):
         self.stop_script()
         self.close()
+    def mousePressEvent(self, event):
+        if event.button() == QtCore.Qt.LeftButton:
+            if event.pos() in self.collapse_button.geometry():
+                self.collapse_offset = event.pos()
+            else:
+                self.offset = event.pos()
+        else:
+            super().mousePressEvent(event)
+
+
+    def mouseMoveEvent(self, event):
+        if self.offset is not None and self.draggable:
+            self.move(self.pos() + event.pos() - self.offset)
+        elif self.collapse_offset is not None and self.draggable:
+            # Calculate the difference between the current position of the collapse button and the previous position
+            delta = event.pos() - self.collapse_offset
+            # Move the whole widget by the same amount as the collapse button
+            self.move(self.pos() + delta)
+            # Update the collapse button offset to the new position
+            self.collapse_offset = event.pos()
+        else:
+            super().mouseMoveEvent(event)
+
+
+    def mouseReleaseEvent(self, event):
+        if self.collapse_offset is not None:
+            self.collapse_offset = None
+        else:
+            self.offset = None
+            super().mouseReleaseEvent(event)
+
 
 
 if __name__ == '__main__':
