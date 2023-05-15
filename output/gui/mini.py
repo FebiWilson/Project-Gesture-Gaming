@@ -4,7 +4,6 @@ import time
 from directkeys import right_pressed,left_pressed,up_pressed,down_pressed,space_pressed
 from directkeys import PressKey, ReleaseKey  
 
-
 break_key_pressed=down_pressed
 accelerato_key_pressed=space_pressed
 third_button=right_pressed

@@ -137,6 +137,7 @@ class MyWidget(QtWidgets.QWidget):
     def close_2(self):
         self.stop_script()
         self.close()
+    
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             if event.pos() in self.collapse_button.geometry():
@@ -146,18 +147,6 @@ class MyWidget(QtWidgets.QWidget):
         else:
             super().mousePressEvent(event)
 
-    def mouseMoveEvent(self, event):
-        if self.offset is not None and self.draggable:
-            self.move(self.pos() + event.pos() - self.offset)
-        elif self.collapse_offset is not None and self.draggable:
-            # Calculate the difference between the current position of the collapse button and the previous position
-            delta = event.pos() - self.collapse_offset
-            # Move the whole widget by the same amount as the collapse button
-            self.move(self.pos() + delta)
-            # Update the collapse button offset to the new position
-            self.collapse_offset = event.pos()
-        else:
-            super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
         if self.collapse_offset is not None:
