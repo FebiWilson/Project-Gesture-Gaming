@@ -9,7 +9,6 @@ accelerato_key_pressed=space_pressed
 third_button=right_pressed
 fourth_button=left_pressed
 
-time.sleep(2.0)
 current_key_pressed = set()
 
 mp_draw=mp.solutions.drawing_utils
@@ -30,7 +29,7 @@ with mp_hand.Hands(min_detection_confidence=0.5,
         rsteer_pressed=False
         key_count=0
         key_pressed=0
-        ret,image=video.read()
+        ret,    image=video.read()
         image=cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image.flags.writeable=False
         results=hands.process(image)

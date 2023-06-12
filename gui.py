@@ -7,7 +7,6 @@ class MyWidget(QtWidgets.QWidget):
         super().__init__(flags=QtCore.Qt.WindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint))
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.move(0, 0)
-        self.setWindowFlags(QtCore.Qt.WindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint))
         self.start_button = QtWidgets.QPushButton('Start')
         self.stop_button = QtWidgets.QPushButton('Stop')
         self.close_button = QtWidgets.QPushButton('X')
@@ -66,12 +65,7 @@ class MyWidget(QtWidgets.QWidget):
         vbox_buttons = QtWidgets.QHBoxLayout()
         vbox_buttons.addWidget(self.start_button)
         vbox_buttons.addWidget(self.stop_button)
-
-        # Add close button to vbox_buttons
-        hbox_close = QtWidgets.QHBoxLayout()
-        hbox_close.addStretch()
-        hbox_close.addWidget(self.close_button)
-        vbox_buttons.addLayout(hbox_close)
+        vbox_buttons.addWidget(self.close_button)
 
         group_box = QtWidgets.QGroupBox('')
         group_box.setStyleSheet('''
@@ -119,10 +113,6 @@ class MyWidget(QtWidgets.QWidget):
         # Remove self.close_button from here
         self.setLayout(vbox_main)
 
-        self.process = None
-        self.draggable = True
-        self.offset = None
-        self.collapse_offset = None
 
     def start_script(self):
         self.process = subprocess.Popen(['python', 'mini.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -137,24 +127,7 @@ class MyWidget(QtWidgets.QWidget):
     def close_2(self):
         self.stop_script()
         self.close()
-    
-    def mousePressEvent(self, event):
-        if event.button() == QtCore.Qt.LeftButton:
-            if event.pos() in self.collapse_button.geometry():
-                self.collapse_offset = event.pos()
-            else:
-                self.offset = event.pos()
-        else:
-            super().mousePressEvent(event)
-
-
-    def mouseReleaseEvent(self, event):
-        if self.collapse_offset is not None:
-            self.collapse_offset = None
-        else:
-            self.offset = None
-            super().mouseReleaseEvent(event)
-    
+        
 
 
 
